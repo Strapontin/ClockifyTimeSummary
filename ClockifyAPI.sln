@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockifyAPI", "ClockifyAPI\ClockifyAPI.csproj", "{5AE911D9-2CE4-4E67-8D03-545C3902AC65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{85A7EDDF-D1A7-48AA-AB9D-E46266AE4595}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AE911D9-2CE4-4E67-8D03-545C3902AC65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AE911D9-2CE4-4E67-8D03-545C3902AC65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AE911D9-2CE4-4E67-8D03-545C3902AC65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE911D9-2CE4-4E67-8D03-545C3902AC65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A636E42-EC4E-4E03-84C8-961749C381E5}
+	EndGlobalSection
+EndGlobal
