@@ -31,8 +31,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.txtStartingDate = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtStartingDate = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -41,6 +41,7 @@
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(12, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 23);
@@ -81,13 +82,6 @@
             this.splitContainer1.SplitterDistance = 124;
             this.splitContainer1.TabIndex = 2;
             // 
-            // txtStartingDate
-            // 
-            this.txtStartingDate.Location = new System.Drawing.Point(12, 89);
-            this.txtStartingDate.Name = "txtStartingDate";
-            this.txtStartingDate.Size = new System.Drawing.Size(100, 23);
-            this.txtStartingDate.TabIndex = 1;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -96,6 +90,13 @@
             this.label1.Size = new System.Drawing.Size(81, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "Date de début";
+            // 
+            // txtStartingDate
+            // 
+            this.txtStartingDate.Location = new System.Drawing.Point(12, 89);
+            this.txtStartingDate.Name = "txtStartingDate";
+            this.txtStartingDate.Size = new System.Drawing.Size(100, 23);
+            this.txtStartingDate.TabIndex = 1;
             // 
             // Form1
             // 

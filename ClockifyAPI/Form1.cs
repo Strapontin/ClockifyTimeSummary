@@ -13,10 +13,11 @@ namespace ClockifyAPI
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             SetDefaultTime();
-            GetTimes();
+            await GetTimes();
+            button1.Enabled = true;
         }
 
         private void SetDefaultTime()
@@ -26,14 +27,14 @@ namespace ClockifyAPI
             txtStartingDate.Text = date.ToString("dd/MM/yyyy");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
-            GetTimes();
+            await GetTimes();
             button1.Enabled = true;
         }
 
-        private async void GetTimes()
+        private async Task GetTimes()
         {
             if (!DateTimeOffset.TryParse(txtStartingDate.Text, out var date))
             {
