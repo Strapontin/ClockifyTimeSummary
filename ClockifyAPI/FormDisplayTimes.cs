@@ -15,6 +15,8 @@ namespace ClockifyAPI
         private const string CELL_INTERVAL_TIME = "TimeSinceStartDate";
         private const string CELL_TASK = "Task";
 
+        private const int PAGE_SIZE = 999;
+
         private string _cbxWorkspaceSelectedId = string.Empty;
 
         public FormDisplayTimes()
@@ -79,68 +81,75 @@ namespace ClockifyAPI
 
         private async Task GetTimes(string workspaceId)
         {
-            dgvClockifyTimes.Rows.Clear();
-
-            if (!DateTimeOffset.TryParse(txtStartingDate.Text, out var date))
+            try
             {
-                MessageBox.Show("La date n'est pas reconnue");
-                return;
-            }
+                dgvClockifyTimes.Rows.Clear();
 
-            var userId = (await clockifyClient.GetCurrentUserAsync()).Data.Id;
-            var projects = (await clockifyClient.FindAllProjectsOnWorkspaceAsync(workspaceId)).Data;
-
-            // Récupère les noms de toutes les tâches
-            List<Clockify.Net.Models.Tasks.TaskDto> allTasks = new();
-            foreach (var project in projects)
-            {
-                var tasksInProject = (await clockifyClient.FindAllTasksAsync(workspaceId, project.Id, pageSize: 500)).Data;
-                allTasks.AddRange(tasksInProject);
-            }
-
-
-            var allTimeEntriesAfterDate = (await clockifyClient.FindAllTimeEntriesForUserAsync(workspaceId, userId, start: date, pageSize: 500)).Data;
-            var grouppedTimeEntriesAfterDate = allTimeEntriesAfterDate.GroupBy(te => te.TaskId);
-
-            var grouppedTimeEntriesAfterDateWithoutTask = grouppedTimeEntriesAfterDate.FirstOrDefault(gte => gte.Key == null);
-
-            // Si on a un élément avec la clé à null, c'est qu'il n'a pas de task d'assignées
-            if (grouppedTimeEntriesAfterDateWithoutTask != null &&
-                grouppedTimeEntriesAfterDateWithoutTask.Any())
-            {
-                // On groupe les éléments sur la description, en prenant uniquement cette semaine
-                foreach (var item in grouppedTimeEntriesAfterDateWithoutTask.GroupBy(x => x.Description))
+                if (!DateTimeOffset.TryParse(txtStartingDate.Text, out var date))
                 {
-                    string projectName = projects.First(p => p.Id == item.First().ProjectId).Name;
-                    var time = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
-                    var displayedTime = new DisplayedTime(time)
+                    MessageBox.Show("La date n'est pas reconnue");
+                    return;
+                }
+
+                var userId = (await clockifyClient.GetCurrentUserAsync()).Data.Id;
+                var projects = (await clockifyClient.FindAllProjectsOnWorkspaceAsync(workspaceId, pageSize: PAGE_SIZE)).Data;
+
+                // Récupère les noms de toutes les tâches
+                List<Clockify.Net.Models.Tasks.TaskDto> allTasks = new();
+                foreach (var project in projects)
+                {
+                    var tasksInProject = (await clockifyClient.FindAllTasksAsync(workspaceId, project.Id, pageSize: PAGE_SIZE)).Data;
+                    allTasks.AddRange(tasksInProject);
+                }
+
+
+                var allTimeEntriesAfterDate = (await clockifyClient.FindAllTimeEntriesForUserAsync(workspaceId, userId, start: date, pageSize: PAGE_SIZE)).Data;
+                var grouppedTimeEntriesAfterDate = allTimeEntriesAfterDate.GroupBy(te => te.TaskId);
+
+                var grouppedTimeEntriesAfterDateWithoutTask = grouppedTimeEntriesAfterDate.FirstOrDefault(gte => gte.Key == null);
+
+                // Si on a un élément avec la clé à null, c'est qu'il n'a pas de task d'assignées
+                if (grouppedTimeEntriesAfterDateWithoutTask != null &&
+                    grouppedTimeEntriesAfterDateWithoutTask.Any())
+                {
+                    // On groupe les éléments sur la description, en prenant uniquement cette semaine
+                    foreach (var item in grouppedTimeEntriesAfterDateWithoutTask.GroupBy(x => x.Description))
                     {
-                        ProjectName = projectName,
-                        TaskName = item.Key,
-                        IntervalTime = time,
+                        string projectName = projects.FirstOrDefault(p => p.Id == item.First().ProjectId)?.Name;
+                        var time = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
+                        var displayedTime = new DisplayedTime(time)
+                        {
+                            ProjectName = projectName,
+                            TaskName = item.Key,
+                            IntervalTime = time,
+                        };
+
+                        AddToDataRow(displayedTime);
+                    }
+                }
+
+                // On récupère les durées totales de toutes les tâches
+                foreach (var item in grouppedTimeEntriesAfterDate.Where(gte => gte.Key != null))
+                {
+                    string taskId = item.First().TaskId;
+                    var fullTimeEntries = (await clockifyClient.FindAllTimeEntriesForUserAsync(workspaceId, userId, task: item.First().TaskId, pageSize: PAGE_SIZE)).Data!;
+
+                    var totalTime = GetTimeFromClockifyDuration(fullTimeEntries.Select(i => i.TimeInterval.Duration));
+                    var timeSinceStartDate = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
+
+                    DisplayedTime displayedTime = new(totalTime)
+                    {
+                        TaskName = allTasks.First(t => t.Id == fullTimeEntries[0].TaskId).Name,
+                        ProjectName = projects.First(p => p.Id == fullTimeEntries[0].ProjectId).Name,
+                        IntervalTime = timeSinceStartDate,
                     };
 
                     AddToDataRow(displayedTime);
                 }
             }
-
-            // On récupère les durées totales de toutes les tâches
-            foreach (var item in grouppedTimeEntriesAfterDate.Where(gte => gte.Key != null))
+            catch (Exception ex)
             {
-                string taskId = item.First().TaskId;
-                var fullTimeEntries = (await clockifyClient.FindAllTimeEntriesForUserAsync(workspaceId, userId, task: item.First().TaskId)).Data!;
-
-                var totalTime = GetTimeFromClockifyDuration(fullTimeEntries.Select(i => i.TimeInterval.Duration));
-                var timeSinceStartDate = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
-
-                DisplayedTime displayedTime = new(totalTime)
-                {
-                    TaskName = allTasks.First(t => t.Id == fullTimeEntries[0].TaskId).Name,
-                    ProjectName = projects.First(p => p.Id == fullTimeEntries[0].ProjectId).Name,
-                    IntervalTime = timeSinceStartDate,
-                };
-
-                AddToDataRow(displayedTime);
+                MessageBox.Show(ex.Message, "Une erreur est survenu lors de la récupération des données Clockify.");
             }
         }
 
