@@ -8,11 +8,14 @@ namespace ClockifyAPI
     {
         private readonly string API_KEY;
         private readonly ClockifyClient clockifyClient;
+        private List<Clockify.Net.Models.Workspaces.WorkspaceDto> workspaces = new();
 
         private const string CELL_PROJECT = "Project";
         private const string CELL_TOTAL_TIME = "TotalTime";
         private const string CELL_INTERVAL_TIME = "TimeSinceStartDate";
         private const string CELL_TASK = "Task";
+
+        private string _cbxWorkspaceSelectedId = string.Empty;
 
         public FormDisplayTimes()
         {
@@ -24,11 +27,40 @@ namespace ClockifyAPI
 
         private async void FormDisplayTimes_Load(object sender, EventArgs e)
         {
-            this.Text = $"Affichage des temps de : {(await clockifyClient.GetCurrentUserAsync()).Data.Name}";
             SetDefaultTime();
-            await GetTimes();
-            btnRefresh.Enabled = true;
+            this.Text = $"Affichage des temps de : {(await clockifyClient.GetCurrentUserAsync()).Data.Name}";
+            workspaces = (await clockifyClient.GetWorkspacesAsync()).Data;
+
+            Dictionary<string, string> workspaceCbx = new();
+            foreach (var workspace in workspaces)
+            {
+                workspaceCbx.Add(workspace.Id, workspace.Name);
+            }
+
+            cbxWorkspace.DataSource = new BindingSource(workspaceCbx, null);
+            cbxWorkspace.DisplayMember = "Value";
+            cbxWorkspace.ValueMember = "Key";
+            cbxWorkspace.DropDownWidth = DropDownWidth(cbxWorkspace);
         }
+
+        int DropDownWidth(ComboBox cbx)
+        {
+            int maxWidth = 0;
+            int temp = 0;
+            Label label1 = new();
+            foreach (var obj in cbx.Items)
+            {
+                label1.Text = ((KeyValuePair<string, string>)obj).Value;
+                temp = label1.PreferredWidth;
+                if (temp > maxWidth)
+                {
+                    maxWidth = temp;
+                }
+            }
+            label1.Dispose();
+            return maxWidth;
+        }
+
 
         private void SetDefaultTime()
         {
@@ -39,12 +71,13 @@ namespace ClockifyAPI
 
         private async void btnRefresh_Click(object sender, EventArgs e)
         {
-            btnRefresh.Enabled = false;
-            await GetTimes();
-            btnRefresh.Enabled = true;
+            SetControlsEnabled(false);
+            string selectedValue = ((KeyValuePair<string, string>)cbxWorkspace.SelectedItem).Key;
+            await GetTimes(selectedValue);
+            SetControlsEnabled(true);
         }
 
-        private async Task GetTimes()
+        private async Task GetTimes(string workspaceId)
         {
             dgvClockifyTimes.Rows.Clear();
 
@@ -55,8 +88,6 @@ namespace ClockifyAPI
             }
 
             var userId = (await clockifyClient.GetCurrentUserAsync()).Data.Id;
-            var workspace = (await clockifyClient.GetWorkspacesAsync()).Data;
-            var workspaceId = workspace.First().Id;
             var projects = (await clockifyClient.FindAllProjectsOnWorkspaceAsync(workspaceId)).Data;
 
             // Récupère les noms de toutes les tâches
@@ -74,7 +105,8 @@ namespace ClockifyAPI
             var grouppedTimeEntriesAfterDateWithoutTask = grouppedTimeEntriesAfterDate.FirstOrDefault(gte => gte.Key == null);
 
             // Si on a un élément avec la clé à null, c'est qu'il n'a pas de task d'assignées
-            if (grouppedTimeEntriesAfterDateWithoutTask.Any())
+            if (grouppedTimeEntriesAfterDateWithoutTask != null &&
+                grouppedTimeEntriesAfterDateWithoutTask.Any())
             {
                 // On groupe les éléments sur la description, en prenant uniquement cette semaine
                 foreach (var item in grouppedTimeEntriesAfterDateWithoutTask.GroupBy(x => x.Description))
@@ -84,6 +116,7 @@ namespace ClockifyAPI
                     var displayedTime = new DisplayedTime(time)
                     {
                         ProjectName = projectName,
+                        TaskName = item.Key,
                         IntervalTime = time,
                     };
 
@@ -145,6 +178,25 @@ namespace ClockifyAPI
             int.TryParse(groups["seconds"].ToString().TrimEnd('S'), out int seconds);
 
             return new TimeSpan(hours, minutes, seconds);
+        }
+
+        private async void cbxWorkspace_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string selectedValue = ((KeyValuePair<string, string>)cbxWorkspace.SelectedItem).Key;
+            if (_cbxWorkspaceSelectedId == selectedValue)
+                return;
+
+            _cbxWorkspaceSelectedId = selectedValue;
+
+            SetControlsEnabled(false);
+            await GetTimes(selectedValue);
+            SetControlsEnabled(true);
+        }
+
+        private void SetControlsEnabled(bool enabled)
+        {
+            btnRefresh.Enabled = enabled;
+            cbxWorkspace.Enabled = enabled;
         }
     }
 }

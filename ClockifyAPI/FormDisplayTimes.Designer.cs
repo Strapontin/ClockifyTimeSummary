@@ -30,6 +30,8 @@
         {
             this.btnRefresh = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbxWorkspace = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtStartingDate = new System.Windows.Forms.TextBox();
             this.dgvClockifyTimes = new System.Windows.Forms.DataGridView();
@@ -44,12 +46,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvClockifyTimes)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // btnRefresh
             // 
             this.btnRefresh.Enabled = false;
             this.btnRefresh.Location = new System.Drawing.Point(12, 12);
-            this.btnRefresh.Name = "button1";
-            this.btnRefresh.Size = new System.Drawing.Size(100, 23);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(121, 23);
             this.btnRefresh.TabIndex = 0;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -64,6 +66,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.cbxWorkspace);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.txtStartingDate);
             this.splitContainer1.Panel1.Controls.Add(this.btnRefresh);
@@ -72,13 +76,34 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dgvClockifyTimes);
             this.splitContainer1.Size = new System.Drawing.Size(991, 488);
-            this.splitContainer1.SplitterDistance = 124;
+            this.splitContainer1.SplitterDistance = 141;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 56);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 15);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Workspace";
+            // 
+            // cbxWorkspace
+            // 
+            this.cbxWorkspace.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxWorkspace.Enabled = false;
+            this.cbxWorkspace.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.cbxWorkspace.FormattingEnabled = true;
+            this.cbxWorkspace.Location = new System.Drawing.Point(12, 74);
+            this.cbxWorkspace.Name = "cbxWorkspace";
+            this.cbxWorkspace.Size = new System.Drawing.Size(121, 23);
+            this.cbxWorkspace.TabIndex = 3;
+            this.cbxWorkspace.SelectedValueChanged += new System.EventHandler(this.cbxWorkspace_SelectedValueChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 71);
+            this.label1.Location = new System.Drawing.Point(12, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 15);
             this.label1.TabIndex = 2;
@@ -86,12 +111,12 @@
             // 
             // txtStartingDate
             // 
-            this.txtStartingDate.Location = new System.Drawing.Point(12, 89);
+            this.txtStartingDate.Location = new System.Drawing.Point(12, 136);
             this.txtStartingDate.Name = "txtStartingDate";
-            this.txtStartingDate.Size = new System.Drawing.Size(100, 23);
+            this.txtStartingDate.Size = new System.Drawing.Size(121, 23);
             this.txtStartingDate.TabIndex = 1;
             // 
-            // dataGridView1
+            // dgvClockifyTimes
             // 
             this.dgvClockifyTimes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClockifyTimes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -101,9 +126,9 @@
             this.Task});
             this.dgvClockifyTimes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvClockifyTimes.Location = new System.Drawing.Point(0, 0);
-            this.dgvClockifyTimes.Name = "dataGridView1";
+            this.dgvClockifyTimes.Name = "dgvClockifyTimes";
             this.dgvClockifyTimes.RowTemplate.Height = 25;
-            this.dgvClockifyTimes.Size = new System.Drawing.Size(863, 488);
+            this.dgvClockifyTimes.Size = new System.Drawing.Size(846, 488);
             this.dgvClockifyTimes.TabIndex = 0;
             // 
             // Project
@@ -118,24 +143,24 @@
             // 
             // TimeSinceStartDate
             // 
-            this.TimeSinceStartDate.HeaderText = "Temps Depuis Date Début";
+            this.TimeSinceStartDate.HeaderText = "Temps Depuis Date Début (avec tache)";
             this.TimeSinceStartDate.Name = "TimeSinceStartDate";
             this.TimeSinceStartDate.Width = 120;
             // 
             // Task
             // 
-            this.Task.HeaderText = "Tache";
+            this.Task.HeaderText = "Tache/Description";
             this.Task.Name = "Task";
             this.Task.Width = 500;
             // 
-            // Form1
+            // FormDisplayTimes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(991, 488);
             this.Controls.Add(this.splitContainer1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "FormDisplayTimes";
+            this.Text = "Affichage des temps";
             this.Load += new System.EventHandler(this.FormDisplayTimes_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -158,5 +183,7 @@
         private DataGridViewTextBoxColumn TotalTime;
         private DataGridViewTextBoxColumn TimeSinceStartDate;
         private DataGridViewTextBoxColumn Task;
+        private Label label2;
+        private ComboBox cbxWorkspace;
     }
 }
