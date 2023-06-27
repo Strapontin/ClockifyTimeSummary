@@ -1,0 +1,4 @@
+Clef API Clockify :
+  - Générer la clef en bas du lien suivant : https://app.clockify.me/user/settings
+  - Créer dans ce répertoire un fichier "ClockifyApiKey.txt" et coller en dur la clef à l'intérieur
+  
