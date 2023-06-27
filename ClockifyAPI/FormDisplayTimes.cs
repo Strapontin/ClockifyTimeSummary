@@ -116,12 +116,15 @@ namespace ClockifyAPI
                     foreach (var item in grouppedTimeEntriesAfterDateWithoutTask.GroupBy(x => x.Description))
                     {
                         string projectName = projects.FirstOrDefault(p => p.Id == item.First().ProjectId)?.Name;
-                        var time = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
-                        var displayedTime = new DisplayedTime(time)
+                        var fullTimeEntries = (await clockifyClient.FindAllTimeEntriesForUserAsync(workspaceId, userId, description: item.First().Description, pageSize: PAGE_SIZE)).Data!;
+
+                        var totalTime = GetTimeFromClockifyDuration(fullTimeEntries.Select(i => i.TimeInterval.Duration));
+                        var intervalTime = GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration));
+                        var displayedTime = new DisplayedTime(totalTime)
                         {
                             ProjectName = projectName,
                             TaskName = item.Key,
-                            IntervalTime = time,
+                            IntervalTime = intervalTime,
                         };
 
                         AddToDataRow(displayedTime);
