@@ -8,27 +8,29 @@ namespace ClockifyAPI
 {
     internal class DisplayedTime
     {
-        public DisplayedTime() { _time = new(); }
+        public DisplayedTime() { _totalTime = new(); }
 
         public DisplayedTime(string description, TimeSpan time)
         {
             Description = description;
-            _time = time;
+            _totalTime = time;
         }
 
 
         public string Description { get; set; }
+        public string TaskName { get; set; }
+        public string ProjectName { get; set; }
 
-        private TimeSpan _time;
-        public TimeSpan Time
+        private TimeSpan _totalTime;
+        public TimeSpan TotalTime
         {
-            get { return _time; }
+            get { return _totalTime; }
         }
 
 
         public void AddTime(TimeSpan timeSpan)
         {
-            _time = Time.Add(timeSpan);
+            _totalTime = TotalTime.Add(timeSpan);
         }
     }
 }

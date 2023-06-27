@@ -6,6 +6,10 @@ namespace ClockifyAPI
     public partial class Form1 : Form
     {
         private readonly string API_KEY;
+        private const string CELL_PROJECT = "Project";
+        private const string CELL_TOTAL_TIME = "TotalTime";
+        private const string CELL_INTERVAL_TIME = "IntervalTime";
+        private const string CELL_TASK = "Task";
 
         public Form1()
         {
@@ -36,6 +40,9 @@ namespace ClockifyAPI
 
         private async Task GetTimes()
         {
+            textBox1.Text = "";
+            dataGridView1.Rows.Clear();
+
             if (!DateTimeOffset.TryParse(txtStartingDate.Text, out var date))
             {
                 MessageBox.Show("La date n'est pas reconnue");
@@ -72,7 +79,12 @@ namespace ClockifyAPI
                 foreach (var item in grouppedTEWithoutTask.GroupBy(x => x.Description))
                 {
                     string projectName = projects.First(p => p.Id == item.First().ProjectId).Name;
-                    displayedTimes.Add(new DisplayedTime(SetName(item.Key, projectName), GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration))));
+                    var displayedTime = new DisplayedTime(item.Key, GetTimeFromClockifyDuration(item.Select(i => i.TimeInterval.Duration)));
+                    displayedTime.ProjectName = projectName;
+
+                    displayedTimes.Add(displayedTime);
+
+                    AddToDataRow(displayedTime);
                 }
             }
 
@@ -87,15 +99,18 @@ namespace ClockifyAPI
 
                 foreach (var timeEntry in timeEntries)
                 {
-                    string taskName = taskDtos.First(t => t.Id == timeEntry.TaskId).Name;
-                    string projectName = projects.First(p => p.Id == timeEntry.ProjectId).Name;
+                    displayedTime.TaskName = taskDtos.First(t => t.Id == timeEntry.TaskId).Name;
+                    displayedTime.ProjectName = projects.First(p => p.Id == timeEntry.ProjectId).Name;
 
-                    displayedTime.Description = SetName(taskName, projectName);
+                    displayedTime.Description = SetName(displayedTime.TaskName, displayedTime.ProjectName);
                     displayedTime.AddTime(GetTimeFromClockifyDuration(timeEntry.TimeInterval.Duration));
                 }
+
+                AddToDataRow(displayedTime);
             }
 
-            var displayedValues = displayedTimes.OrderBy(dt => dt.Description).Select(dt => $"{dt.Time} -- {dt.Description}");
+            var displayedValues = displayedTimes.OrderBy(dt => dt.Description).Select(dt => $"{dt.TotalTime} -- {dt.Description}");
+
 
             textBox1.Text = String.Join(Environment.NewLine, displayedValues);
         }
@@ -116,6 +131,15 @@ namespace ClockifyAPI
             }
 
             return result;
+        }
+
+        private void AddToDataRow(DisplayedTime displayedTime)
+        {
+            var row = dataGridView1.Rows[dataGridView1.Rows.Add()];
+            row.Cells[CELL_PROJECT].Value = displayedTime.ProjectName;
+            row.Cells[CELL_TOTAL_TIME].Value = displayedTime.TotalTime;
+            //row.Cells[CELL_INTERVAL_TIME] = displayedTime.;
+            row.Cells[CELL_TASK].Value = displayedTime.TaskName;
         }
 
         private TimeSpan GetTimeFromClockifyDuration(string duration)
