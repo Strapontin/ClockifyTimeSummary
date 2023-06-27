@@ -1,6 +1,6 @@
 ﻿namespace ClockifyAPI
 {
-    partial class Form1
+    partial class FormDisplayTimes
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,50 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label1 = new System.Windows.Forms.Label();
             this.txtStartingDate = new System.Windows.Forms.TextBox();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvClockifyTimes = new System.Windows.Forms.DataGridView();
             this.Project = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IntervalTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeSinceStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Task = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvClockifyTimes)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Refresh";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.AcceptsReturn = true;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(863, 244);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.WordWrap = false;
+            this.btnRefresh.Enabled = false;
+            this.btnRefresh.Location = new System.Drawing.Point(12, 12);
+            this.btnRefresh.Name = "button1";
+            this.btnRefresh.Size = new System.Drawing.Size(100, 23);
+            this.btnRefresh.TabIndex = 0;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // splitContainer1
             // 
@@ -84,11 +66,11 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.txtStartingDate);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Controls.Add(this.btnRefresh);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Panel2.Controls.Add(this.dgvClockifyTimes);
             this.splitContainer1.Size = new System.Drawing.Size(991, 488);
             this.splitContainer1.SplitterDistance = 124;
             this.splitContainer1.TabIndex = 2;
@@ -109,38 +91,20 @@
             this.txtStartingDate.Size = new System.Drawing.Size(100, 23);
             this.txtStartingDate.TabIndex = 1;
             // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.textBox1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer2.Size = new System.Drawing.Size(863, 488);
-            this.splitContainer2.SplitterDistance = 244;
-            this.splitContainer2.TabIndex = 2;
-            // 
             // dataGridView1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dgvClockifyTimes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvClockifyTimes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Project,
             this.TotalTime,
-            this.IntervalTime,
+            this.TimeSinceStartDate,
             this.Task});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 25;
-            this.dataGridView1.Size = new System.Drawing.Size(863, 240);
-            this.dataGridView1.TabIndex = 0;
+            this.dgvClockifyTimes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvClockifyTimes.Location = new System.Drawing.Point(0, 0);
+            this.dgvClockifyTimes.Name = "dataGridView1";
+            this.dgvClockifyTimes.RowTemplate.Height = 25;
+            this.dgvClockifyTimes.Size = new System.Drawing.Size(863, 488);
+            this.dgvClockifyTimes.TabIndex = 0;
             // 
             // Project
             // 
@@ -152,11 +116,11 @@
             this.TotalTime.HeaderText = "Temps Total";
             this.TotalTime.Name = "TotalTime";
             // 
-            // IntervalTime
+            // TimeSinceStartDate
             // 
-            this.IntervalTime.HeaderText = "Temps Interval";
-            this.IntervalTime.Name = "IntervalTime";
-            this.IntervalTime.Width = 120;
+            this.TimeSinceStartDate.HeaderText = "Temps Depuis Date Début";
+            this.TimeSinceStartDate.Name = "TimeSinceStartDate";
+            this.TimeSinceStartDate.Width = 120;
             // 
             // Task
             // 
@@ -172,34 +136,27 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.FormDisplayTimes_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvClockifyTimes)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Button button1;
-        private TextBox textBox1;
+        private Button btnRefresh;
         private SplitContainer splitContainer1;
         private Label label1;
         private TextBox txtStartingDate;
-        private SplitContainer splitContainer2;
-        private DataGridView dataGridView1;
+        private DataGridView dgvClockifyTimes;
         private DataGridViewTextBoxColumn Project;
         private DataGridViewTextBoxColumn TotalTime;
-        private DataGridViewTextBoxColumn IntervalTime;
+        private DataGridViewTextBoxColumn TimeSinceStartDate;
         private DataGridViewTextBoxColumn Task;
     }
 }
